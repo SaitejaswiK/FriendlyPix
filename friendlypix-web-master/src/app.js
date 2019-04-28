@@ -31,6 +31,19 @@ import 'material-design-lite/material.min.css';
 import 'firebaseui/dist/firebaseui.css';
 import './app.css';
 
+/**
+ * This loads the critical path of the app to speed up first draw.
+ * The following components are initially loaded:
+ *  - IP Filter for EU countries features.
+ *  - CSS styling.
+ *  - Auth to know if the user is signed-in.
+ *  - The App's router which can display the Splash page.
+ *  - Enable Offline.
+ *
+ * The rest of the app is loaded asynchroneously and passed to the router.
+ * Google Analytics is asynchroneously loaded.
+ */
+
 // Configure Firebase.
 firebase.initializeApp(firebaseConfig.result);
 // Make firebase reachable through the console.

@@ -99,7 +99,7 @@ export default class FirebaseHelper {
    */
   getComments(postId) {
     return this._getPaginatedFeed(`/comments/${postId}`,
-        FirebaseHelper.COMMENTS_PAGE_SIZE, null, false);
+      FirebaseHelper.COMMENTS_PAGE_SIZE, null, false);
   }
 
   /**
@@ -132,7 +132,7 @@ export default class FirebaseHelper {
    */
   subscribeToHomeFeed(callback, latestPostId) {
     return this._subscribeToFeed(`/feed/${this.auth.currentUser.uid}`, callback, latestPostId,
-        true);
+      true);
   }
 
   /**
@@ -145,7 +145,7 @@ export default class FirebaseHelper {
    */
   getHomeFeedPosts() {
     return this._getPaginatedFeed(`/feed/${this.auth.currentUser.uid}`,
-        FirebaseHelper.POSTS_PAGE_SIZE, null, true);
+      FirebaseHelper.POSTS_PAGE_SIZE, null, true);
   }
 
   /**
@@ -156,7 +156,7 @@ export default class FirebaseHelper {
    */
   subscribeToUserFeed(uid, callback, latestPostId) {
     return this._subscribeToFeed(`/people/${uid}/posts`, callback,
-        latestPostId, true);
+      latestPostId, true);
   }
 
   /**
@@ -167,7 +167,7 @@ export default class FirebaseHelper {
    */
   subscribeToHashtagFeed(hashtag, callback, latestPostId) {
     return this._subscribeToFeed(`/hashtags/${hashtag}`, callback,
-        latestPostId, true);
+      latestPostId, true);
   }
 
   /**
@@ -180,7 +180,7 @@ export default class FirebaseHelper {
    */
   getUserFeedPosts(uid) {
     return this._getPaginatedFeed(`/people/${uid}/posts`,
-        FirebaseHelper.USER_PAGE_POSTS_PAGE_SIZE, null, true);
+      FirebaseHelper.USER_PAGE_POSTS_PAGE_SIZE, null, true);
   }
 
   /**
@@ -193,7 +193,7 @@ export default class FirebaseHelper {
    */
   getHastagsPosts(hashtag) {
     return this._getPaginatedFeed(`/hashtags/${hashtag}`,
-        FirebaseHelper.HASHTAG_PAGE_POSTS_PAGE_SIZE, null, true);
+      FirebaseHelper.HASHTAG_PAGE_POSTS_PAGE_SIZE, null, true);
   }
 
   /**
@@ -218,7 +218,7 @@ export default class FirebaseHelper {
           callback(feedData.key, feedData.val());
         } else {
           this.database.ref(`/posts/${feedData.key}`).once('value').then(
-              (postData) => callback(postData.key, postData.val()));
+            (postData) => callback(postData.key, postData.val()));
         }
       }
     });
@@ -256,7 +256,7 @@ export default class FirebaseHelper {
         delete entries[entryIds[0]];
         const nextPageStartingId = entryIds.shift();
         nextPage = () => this._getPaginatedFeed(
-            uri, pageSize, nextPageStartingId, fetchPostDetails);
+          uri, pageSize, nextPageStartingId, fetchPostDetails);
       }
       if (fetchPostDetails) {
         // Fetch details of all posts.
@@ -360,23 +360,23 @@ export default class FirebaseHelper {
   searchHashtags(searchString, maxResults) {
     searchString = latinize(searchString).toLowerCase();
     return this.database.ref('/hashtags').orderByKey().startAt(searchString)
-        .limitToFirst(maxResults).once('value').then((result) => {
-          const hashtagsData = {};
-          // construct people from the two search queries results.
-          result.forEach((data) => {
-            hashtagsData[data.key] = data.val();
-          });
-
-          // Remove results that do not start with the search query.
-          const hashtags = Object.keys(hashtagsData);
-          hashtags.forEach((hashtag) => {
-            if (!hashtag.startsWith(searchString)) {
-              delete hashtagsData[hashtag];
-            }
-          });
-          return hashtagsData;
+      .limitToFirst(maxResults).once('value').then((result) => {
+        const hashtagsData = {};
+        // construct people from the two search queries results.
+        result.forEach((data) => {
+          hashtagsData[data.key] = data.val();
         });
-      }
+
+        // Remove results that do not start with the search query.
+        const hashtags = Object.keys(hashtagsData);
+        hashtags.forEach((hashtag) => {
+          if (!hashtag.startsWith(searchString)) {
+            delete hashtagsData[hashtag];
+          }
+        });
+        return hashtagsData;
+      });
+  }
 
   /**
    * Returns the users which name match the given search query as a Promise.
@@ -384,11 +384,11 @@ export default class FirebaseHelper {
   searchUsers(searchString, maxResults) {
     searchString = latinize(searchString).toLowerCase();
     const query = this.database.ref('/people')
-        .orderByChild('_search_index/full_name').startAt(searchString)
-        .limitToFirst(maxResults).once('value');
+      .orderByChild('_search_index/full_name').startAt(searchString)
+      .limitToFirst(maxResults).once('value');
     const reversedQuery = this.database.ref('/people')
-        .orderByChild('_search_index/reversed_full_name').startAt(searchString)
-        .limitToFirst(maxResults).once('value');
+      .orderByChild('_search_index/reversed_full_name').startAt(searchString)
+      .limitToFirst(maxResults).once('value');
     return Promise.all([query, reversedQuery]).then((results) => {
       const people = {};
       // construct people from the two search queries results.
@@ -500,7 +500,7 @@ export default class FirebaseHelper {
    */
   updateLike(postId, value) {
     return this.database.ref(`likes/${postId}/${this.auth.currentUser.uid}`)
-        .set(value ? firebase.database.ServerValue.TIMESTAMP : null);
+      .set(value ? firebase.database.ServerValue.TIMESTAMP : null);
   }
 
   /**
@@ -546,7 +546,7 @@ export default class FirebaseHelper {
   }
 
 
-  uploadNewVideo(video, type, fileName, caption) {
+ uploadNewVideo(video, type, fileName, caption) {
     // Get a reference to where the post will be created.
     const newPostKey = this.database.ref('/posts').push().key;
 
@@ -649,7 +649,6 @@ export default class FirebaseHelper {
     });
   }
 
-  
 
   /**
    * Follow/Unfollow a user and return a promise once that's done.
@@ -660,25 +659,25 @@ export default class FirebaseHelper {
   toggleFollowUser(followedUserId, follow) {
     // Add or remove posts to the user's home feed.
     return this.database.ref(`/people/${followedUserId}/posts`).once('value').then(
-        (data) => {
-          const updateData = {};
-          let lastPostId = true;
+      (data) => {
+        const updateData = {};
+        let lastPostId = true;
 
-          // Add/remove followed user's posts to the home feed.
-          data.forEach((post) => {
-            updateData[`/feed/${this.auth.currentUser.uid}/${post.key}`] = follow ? !!follow : null;
-            lastPostId = post.key;
-          });
-
-          // Add/remove followed user to the 'following' list.
-          updateData[`/people/${this.auth.currentUser.uid}/following/${followedUserId}`] =
-              follow ? lastPostId : null;
-
-          // Add/remove signed-in user to the list of followers.
-          updateData[`/followers/${followedUserId}/${this.auth.currentUser.uid}`] =
-              follow ? !!follow : null;
-          return this.database.ref().update(updateData);
+        // Add/remove followed user's posts to the home feed.
+        data.forEach((post) => {
+          updateData[`/feed/${this.auth.currentUser.uid}/${post.key}`] = follow ? !!follow : null;
+          lastPostId = post.key;
         });
+
+        // Add/remove followed user to the 'following' list.
+        updateData[`/people/${this.auth.currentUser.uid}/following/${followedUserId}`] =
+          follow ? lastPostId : null;
+
+        // Add/remove signed-in user to the list of followers.
+        updateData[`/followers/${followedUserId}/${this.auth.currentUser.uid}`] =
+          follow ? !!follow : null;
+        return this.database.ref().update(updateData);
+      });
   }
 
   /**
@@ -698,7 +697,7 @@ export default class FirebaseHelper {
    */
   registerToFollowStatusUpdate(userId, callback) {
     const followStatusRef =
-        this.database.ref(`/people/${this.auth.currentUser.uid}/following/${userId}`);
+      this.database.ref(`/people/${this.auth.currentUser.uid}/following/${userId}`);
     followStatusRef.on('value', callback);
     this.firebaseRefs.push(followStatusRef);
   }
@@ -708,7 +707,7 @@ export default class FirebaseHelper {
    */
   registerToBlockedStatusUpdate(userId, callback) {
     const blockStatusRef =
-        this.database.ref(`/blocking/${this.auth.currentUser.uid}/${userId}`);
+      this.database.ref(`/blocking/${this.auth.currentUser.uid}/${userId}`);
     blockStatusRef.on('value', callback);
     this.firebaseRefs.push(blockStatusRef);
   }
@@ -718,7 +717,7 @@ export default class FirebaseHelper {
    */
   toggleNotificationEnabled(checked) {
     return this.database.ref(`/people/${this.auth.currentUser.uid}/notificationEnabled`)
-        .set(checked ? checked : null);
+      .set(checked ? checked : null);
   }
 
   /**
@@ -726,7 +725,7 @@ export default class FirebaseHelper {
    */
   saveNotificationToken(token) {
     return this.database.ref(`/people/${this.auth.currentUser.uid}/notificationTokens/${token}`)
-        .set(true);
+      .set(true);
   }
 
   /**
@@ -734,7 +733,7 @@ export default class FirebaseHelper {
    */
   registerToNotificationEnabledStatusUpdate(callback) {
     const followStatusRef =
-        this.database.ref(`/people/${this.auth.currentUser.uid}/notificationEnabled`);
+      this.database.ref(`/people/${this.auth.currentUser.uid}/notificationEnabled`);
     followStatusRef.on('value', callback);
     this.firebaseRefs.push(followStatusRef);
   }

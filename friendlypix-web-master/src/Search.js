@@ -125,7 +125,7 @@ export default class Search {
   static createHashtagSearchResultHtml(hashtag, nbPosts) {
     return `
         <a class="fp-searchResultItem fp-usernamelink mdl-button mdl-js-button" href="/search/${hashtag}">
-            <div class="fp-avatar"style="background-image: url('../public/images/hashtag.png')"></div>
+            <div class="fp-avatar"style="background-image: url('/public/images/hashtag.png')"></div>
             <div class="fp-username mdl-color-text--black">#${hashtag} - <i>${nbPosts} posts</i></div>
         </a>`;
   }

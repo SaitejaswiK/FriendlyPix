@@ -231,7 +231,7 @@ export default class Uploader {
     };
   }
 
-  async uploadVideo(e) {
+ async uploadVideo(e) {
     e.preventDefault();
     this.disableUploadUi(true);
     const imageCaption = this.imageCaptionInput.val();
